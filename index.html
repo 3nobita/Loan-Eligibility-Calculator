@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Eligibility Calculator</title>
+<style>
+  .container{
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+  h1{
+    text-align: center;
+  }
+</style>
+</head>
+
+<body>
+  <h1>Loan Eligibility Calculator</h1>
+  <div class="container">
+    <form id="loanForm">
+      <div class="form-group">
+        <label for="takeHomeSalary">Take Home Salary (₹):</label>
+        <input type="number" id="takeHomeSalary" required>
+      </div>
+      <div class="form-group">
+        <label for="homeLoanEMI">Home Loan EMI (₹):</label>
+        <input type="number" id="homeLoanEMI" required>
+      </div>
+      <div class="form-group">
+        <label for="personalLoanEMI">Personal Loan EMI (₹):</label>
+        <input type="number" id="personalLoanEMI" required>
+      </div>
+      <div class="form-group">
+        <label for="creditCardDues">Credit Card Dues (₹):</label>
+        <input type="number" id="creditCardDues" required>
+      </div>
+      <div class="form-group">
+        <label for="creditCardMinPayment">Credit Card Minimum Payment (₹):</label>
+        <input type="number" id="creditCardMinPayment" required>
+      </div>
+      <div class="form-group">
+        <label for="otherEMI">Other EMI (₹):</label>
+        <input type="number" id="otherEMI" required>
+      </div>
+      <div class="form-group">
+        <label for="loanTenure">Loan Tenure (Years):</label>
+        <input type="number" id="loanTenure" required>
+      </div>
+      <div class="form-group">
+        <label for="interestRate">Rate of Interest (%):</label>
+        <input type="number" step="0.01" id="interestRate" required>
+      </div>
+      <div class="form-group">
+        <label for="loanAmount">Loan Amount (₹):</label>
+        <input type="number" id="loanAmount" required>
+      </div>
+      <button type="button" onclick="calculateLoanEligibility()">Calculate</button>
+    </form>
+    <div id="result" class="result"></div>
+  </div>
+  <script>
+    function calculateLoanEligibility() {
+      // Get form values
+      const takeHomeSalary = parseFloat(document.getElementById('takeHomeSalary').value);
+      const homeLoanEMI = parseFloat(document.getElementById('homeLoanEMI').value);
+      const personalLoanEMI = parseFloat(document.getElementById('personalLoanEMI').value);
+      const creditCardDues = parseFloat(document.getElementById('creditCardDues').value);
+      const creditCardMinPayment = parseFloat(document.getElementById('creditCardMinPayment').value);
+      const otherEMI = parseFloat(document.getElementById('otherEMI').value);
+      const loanTenure = parseInt(document.getElementById('loanTenure').value);
+      const interestRate = parseFloat(document.getElementById('interestRate').value);
+      const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+
+      // Total Monthly Obligations
+      const totalMonthlyObligations = homeLoanEMI + personalLoanEMI + creditCardMinPayment + otherEMI;
+
+      // Available EMI Capacity
+      const availableEMICapacity = takeHomeSalary - totalMonthlyObligations;
+
+      // EMI Calculation
+      const monthlyInterestRate = interestRate / 12 / 100;
+      const numberOfPayments = loanTenure * 12;
+      const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+
+      // Eligibility Check
+      const resultDiv = document.getElementById('result');
+      if (emi <= availableEMICapacity) {
+        resultDiv.innerHTML = `You are eligible for the loan. Your EMI will be ₹${emi.toFixed(2)}`;
+      } else {
+        resultDiv.innerHTML = `You are not eligible for the loan. Your EMI will be ₹${emi.toFixed(2)}`;
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
