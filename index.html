@@ -7,130 +7,191 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
+            margin: 20px;
         }
-        .calculator {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
+
+        label {
             display: block;
-            margin-bottom: 5px;
+            margin: 10px 0 5px;
         }
-        .form-group input {
+
+        input,
+        button {
+            margin-bottom: 10px;
+            padding: 10px;
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
         }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
         .result {
             margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        .slider-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            margin: 0 10px;
         }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h2>Loan Eligibility Calculator</h2>
-        <form id="loan-form">
-            <div class="form-group">
-                <label for="takeHomeSalary">Take Home Salary:</label>
-                <input type="number" id="takeHomeSalary" value="100000" />
-            </div>
-            <div class="form-group">
-                <label for="foirPercentage">FOIR (%) :</label>
-                <input type="number" id="foirPercentage" value="50" />
-            </div>
-            <div class="form-group">
-                <label for="homeLoanEMI">Home Loan EMI:</label>
-                <input type="number" id="homeLoanEMI" value="20000" />
-            </div>
-            <div class="form-group">
-                <label for="personalLoanEMI">Personal Loan EMI:</label>
-                <input type="number" id="personalLoanEMI" value="10000" />
-            </div>
-            <div class="form-group">
-                <label for="creditCardDues1">Credit Card Dues 1:</label>
-                <input type="number" id="creditCardDues1" value="100000" />
-            </div>
-            <div class="form-group">
-                <label for="creditCardDues2">Credit Card Dues 2:</label>
-                <input type="number" id="creditCardDues2" value="120000" />
-            </div>
-            <div class="form-group">
-                <label for="creditCardDues3">Credit Card Dues 3:</label>
-                <input type="number" id="creditCardDues3" value="5000" />
-            </div>
-            <div class="form-group">
-                <label for="creditCardMinPayment">Credit Card Minimum Payment:</label>
-                <input type="number" id="creditCardMinPayment" value="3750" />
-            </div>
-            <div class="form-group">
-                <label for="otherEMI">Other EMI:</label>
-                <input type="number" id="otherEMI" value="3000" />
-            </div>
-            <div class="form-group">
-                <label for="emiPayingCapacity">EMI Paying Capacity:</label>
-                <input type="number" id="emiPayingCapacity" value="13250" />
-            </div>
-            <div class="form-group">
-                <label for="tenure">Tenure (Years):</label>
-                <input type="number" id="tenure" value="7" />
-            </div>
-            <div class="form-group">
-                <label for="paymentMode">Payment Mode (Months):</label>
-                <input type="number" id="paymentMode" value="12" />
-            </div>
-            <div class="form-group">
-                <label for="interestRate">Rate of Interest (%):</label>
-                <input type="number" id="interestRate" value="10" step="0.01" />
-            </div>
-            <button type="button" onclick="calculateLoanEligibility()">Calculate</button>
-        </form>
-        <div class="result" id="result">
-            <!-- Results will be displayed here -->
+    <h1>Loan Eligibility Calculator</h1>
+    <form id="calculator-form">
+        <label for="take-home-salary">Take Home Salary:</label>
+        <input type="number" id="take-home-salary" placeholder="Enter your salary" oninput="updateFOIRandEmiPayingCapacity()" />
+
+        <label for="foir">LESS FOIR (50%):</label>
+        <input type="number" id="foir" placeholder="Calculated automatically" readonly />
+
+        <label for="home-loan-emi">Existing Home Loan EMI:</label>
+        <input type="number" id="home-loan-emi" placeholder="Enter Home Loan EMI" oninput="updateEmiPayingCapacity()" />
+
+        <label for="personal-loan-emi">Existing Personal Loan EMI:</label>
+        <input type="number" id="personal-loan-emi" placeholder="Enter Personal Loan EMI" oninput="updateEmiPayingCapacity()" />
+
+        <label for="credit-card-dues-1">Existing Credit Card Dues 1:</label>
+        <input type="number" id="credit-card-dues-1" placeholder="Enter Credit Card Dues 1" oninput="updateCreditCardMinPayment(); updateEmiPayingCapacity();" />
+
+        <label for="credit-card-dues-2">Existing Credit Card Dues 2:</label>
+        <input type="number" id="credit-card-dues-2" placeholder="Enter Credit Card Dues 2" oninput="updateCreditCardMinPayment(); updateEmiPayingCapacity();" />
+
+        <label for="credit-card-dues-3">Existing Credit Card Dues 3:</label>
+        <input type="number" id="credit-card-dues-3" placeholder="Enter Credit Card Dues 3" oninput="updateCreditCardMinPayment(); updateEmiPayingCapacity();" />
+
+        <label for="credit-card-min-payment">Credit Card Minimum Payment:</label>
+        <input type="number" id="credit-card-min-payment" placeholder="Calculated automatically" readonly />
+
+        <label for="other-emi">Other EMI:</label>
+        <input type="number" id="other-emi" placeholder="Enter Other EMI" oninput="updateEmiPayingCapacity()" />
+
+        <label for="emi-paying-capacity">EMI Paying Capacity:</label>
+        <input type="number" id="emi-paying-capacity" placeholder="Calculated automatically" readonly />
+
+        <div class="slider-container">
+            <label for="tenure">Tenure (Years): <span id="tenure-value">7</span></label>
+            <input type="range" id="tenure" min="1" max="30" step="1" value="7" oninput="updateTenureValue(); updateLoanAmount()" />
         </div>
-    </div>
+
+        <div class="slider-container">
+            <label for="payment-mode">Payment Mode (Months): <span id="payment-mode-value">12</span></label>
+            <input type="range" id="payment-mode" min="1" max="12" step="1" value="12" oninput="updatePaymentModeValue(); updateLoanAmount()" />
+        </div>
+
+        <div class="slider-container">
+            <label for="interest-rate">Rate of Interest (%): <span id="interest-rate-value">10</span></label>
+            <input type="range" id="interest-rate" min="0.1" max="20" step="0.01" value="10" oninput="updateInterestRateValue(); updateLoanAmount()" />
+        </div>
+
+        <button type="button" onclick="calculateLoan()">Calculate Loan Amount</button>
+    </form>
+
+    <div class="result" id="result"></div>
+
     <script>
-        function calculateLoanEligibility() {
-            // Get the values from the form
-            const takeHomeSalary = parseFloat(document.getElementById('takeHomeSalary').value);
-            const foirPercentage = parseFloat(document.getElementById('foirPercentage').value) / 100;
-            const homeLoanEMI = parseFloat(document.getElementById('homeLoanEMI').value);
-            const personalLoanEMI = parseFloat(document.getElementById('personalLoanEMI').value);
-            const creditCardDues1 = parseFloat(document.getElementById('creditCardDues1').value);
-            const creditCardDues2 = parseFloat(document.getElementById('creditCardDues2').value);
-            const creditCardDues3 = parseFloat(document.getElementById('creditCardDues3').value);
-            const creditCardMinPayment = parseFloat(document.getElementById('creditCardMinPayment').value);
-            const otherEMI = parseFloat(document.getElementById('otherEMI').value);
-            const emiPayingCapacity = parseFloat(document.getElementById('emiPayingCapacity').value);
-            const tenure = parseFloat(document.getElementById('tenure').value);
-            const paymentMode = parseFloat(document.getElementById('paymentMode').value);
-            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+        function updateFOIRandEmiPayingCapacity() {
+            // Get Take Home Salary value
+            const takeHomeSalary = parseFloat(document.getElementById('take-home-salary').value) || 0;
 
-            // Calculate available EMI capacity
-            const netSalary = takeHomeSalary * foirPercentage;
-            const totalEMI = homeLoanEMI + personalLoanEMI + creditCardMinPayment + otherEMI;
-            const availableEMI = emiPayingCapacity;
+            // Calculate FOIR as 50% of Take Home Salary
+            const foirPercentage = 50;
+            const foirAmount = (foirPercentage / 100) * takeHomeSalary;
 
-            // Loan amount calculation using the EMI formula
-            const monthlyInterestRate = interestRate / paymentMode;
-            const numberOfPayments = tenure * paymentMode;
-            const loanAmount = (availableEMI * (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments))) / monthlyInterestRate;
+            // Update the FOIR field
+            document.getElementById('foir').value = foirAmount.toFixed(2);
+
+            // Update EMI Paying Capacity
+            updateEmiPayingCapacity();
+        }
+
+        function updateCreditCardMinPayment() {
+            // Get credit card dues values
+            const creditCardDues1 = parseFloat(document.getElementById('credit-card-dues-1').value) || 0;
+            const creditCardDues2 = parseFloat(document.getElementById('credit-card-dues-2').value) || 0;
+            const creditCardDues3 = parseFloat(document.getElementById('credit-card-dues-3').value) || 0;
+
+            // Calculate Credit Card Minimum Payment as (D9 + D10 + D11) / 3 * 5%
+            const totalCreditCardDues = (creditCardDues1 + creditCardDues2 + creditCardDues3) / 3;
+            const creditCardMinPayment = totalCreditCardDues * 0.05;
+
+            // Update the Credit Card Minimum Payment field
+            document.getElementById('credit-card-min-payment').value = creditCardMinPayment.toFixed(2);
+
+            // Update EMI Paying Capacity after recalculating Credit Card Minimum Payment
+            updateEmiPayingCapacity();
+        }
+
+        function updateEmiPayingCapacity() {
+            // Get values from the form
+            const takeHomeSalary = parseFloat(document.getElementById('take-home-salary').value) || 0;
+            const homeLoanEmi = parseFloat(document.getElementById('home-loan-emi').value) || 0;
+            const personalLoanEmi = parseFloat(document.getElementById('personal-loan-emi').value) || 0;
+            const creditCardMinPayment = parseFloat(document.getElementById('credit-card-min-payment').value) || 0;
+            const otherEmi = parseFloat(document.getElementById('other-emi').value) || 0;
+
+            // Calculate FOIR as 50% of Take Home Salary
+            const foirPercentage = 50;
+            const foirAmount = (foirPercentage / 100) * takeHomeSalary;
+
+            // Calculate EMI Paying Capacity
+            const totalObligations = homeLoanEmi + personalLoanEmi + creditCardMinPayment + otherEmi;
+            const emiPayingCapacity = foirAmount - totalObligations;
+
+            // Update the EMI Paying Capacity field
+            document.getElementById('emi-paying-capacity').value = emiPayingCapacity.toFixed(2);
+        }
+
+        function updateTenureValue() {
+            const tenure = document.getElementById('tenure').value;
+            document.getElementById('tenure-value').textContent = tenure;
+        }
+
+        function updatePaymentModeValue() {
+            const paymentMode = document.getElementById('payment-mode').value;
+            document.getElementById('payment-mode-value').textContent = paymentMode;
+        }
+
+        function updateInterestRateValue() {
+            const interestRate = document.getElementById('interest-rate').value;
+            document.getElementById('interest-rate-value').textContent = interestRate;
+        }
+
+        function calculateLoan() {
+            // Get values from the form
+            const emiPayingCapacity = parseFloat(document.getElementById('emi-paying-capacity').value) || 0;
+            const tenureYears = parseFloat(document.getElementById('tenure').value) || 0;
+            const paymentMode = parseFloat(document.getElementById('payment-mode').value) || 0;
+            const interestRate = parseFloat(document.getElementById('interest-rate').value) || 0;
+
+            // Calculate loan amount using the EMI capacity
+            const numberOfPayments = tenureYears * paymentMode;
+            const monthlyInterestRate = (interestRate / 100) / paymentMode;
+
+            // Using the formula for EMI calculation
+            const loanAmount = emiPayingCapacity * ((1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments)) / monthlyInterestRate);
 
             // Display the result
-            document.getElementById('result').innerHTML = `
-                <h3>Loan Eligibility Result</h3>
-                <p><strong>Net Salary for FOIR Calculation:</strong> ${netSalary.toFixed(2)}</p>
-                <p><strong>Total EMI:</strong> ${totalEMI.toFixed(2)}</p>
-                <p><strong>Available EMI Capacity:</strong> ${availableEMI.toFixed(2)}</p>
-                <p><strong>Estimated Loan Amount:</strong> ${loanAmount.toFixed(2)}</p>
-            `;
+            document.getElementById('result').textContent = `Eligible Loan Amount: ₹${loanAmount.toFixed(2)}`;
         }
+
+        // Initialize calculations on page load
+        updateFOIRandEmiPayingCapacity();
+        updateCreditCardMinPayment();
     </script>
 </body>
 </html>
