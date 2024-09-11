@@ -1,102 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loan Eligibility Calculator</title>
-<style>
-  .container{
-    background-color: gray;
-    display: flex;
-    align-items: center;
-    text-align: center;
-  }
-  h1{
-    text-align: center;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Eligibility Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .calculator {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
 </head>
-
 <body>
-  <h1>Loan Eligibility Calculator</h1>
-  <div class="container">
-    <form id="loanForm">
-      <div class="form-group">
-        <label for="takeHomeSalary">Take Home Salary (₹):</label>
-        <input type="number" id="takeHomeSalary" required>
-      </div>
-      <div class="form-group">
-        <label for="homeLoanEMI">Home Loan EMI (₹):</label>
-        <input type="number" id="homeLoanEMI" required>
-      </div>
-      <div class="form-group">
-        <label for="personalLoanEMI">Personal Loan EMI (₹):</label>
-        <input type="number" id="personalLoanEMI" required>
-      </div>
-      <div class="form-group">
-        <label for="creditCardDues">Credit Card Dues (₹):</label>
-        <input type="number" id="creditCardDues" required>
-      </div>
-      <div class="form-group">
-        <label for="creditCardMinPayment">Credit Card Minimum Payment (₹):</label>
-        <input type="number" id="creditCardMinPayment" required>
-      </div>
-      <div class="form-group">
-        <label for="otherEMI">Other EMI (₹):</label>
-        <input type="number" id="otherEMI" required>
-      </div>
-      <div class="form-group">
-        <label for="loanTenure">Loan Tenure (Years):</label>
-        <input type="number" id="loanTenure" required>
-      </div>
-      <div class="form-group">
-        <label for="interestRate">Rate of Interest (%):</label>
-        <input type="number" step="0.01" id="interestRate" required>
-      </div>
-      <div class="form-group">
-        <label for="loanAmount">Loan Amount (₹):</label>
-        <input type="number" id="loanAmount" required>
-      </div>
-      <button type="button" onclick="calculateLoanEligibility()">Calculate</button>
-    </form>
-    <div id="result" class="result"></div>
-  </div>
-  <script>
-    function calculateLoanEligibility() {
-      // Get form values
-      const takeHomeSalary = parseFloat(document.getElementById('takeHomeSalary').value);
-      const homeLoanEMI = parseFloat(document.getElementById('homeLoanEMI').value);
-      const personalLoanEMI = parseFloat(document.getElementById('personalLoanEMI').value);
-      const creditCardDues = parseFloat(document.getElementById('creditCardDues').value);
-      const creditCardMinPayment = parseFloat(document.getElementById('creditCardMinPayment').value);
-      const otherEMI = parseFloat(document.getElementById('otherEMI').value);
-      const loanTenure = parseInt(document.getElementById('loanTenure').value);
-      const interestRate = parseFloat(document.getElementById('interestRate').value);
-      const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+    <div class="calculator">
+        <h2>Loan Eligibility Calculator</h2>
+        <form id="loan-form">
+            <div class="form-group">
+                <label for="takeHomeSalary">Take Home Salary:</label>
+                <input type="number" id="takeHomeSalary" value="100000" />
+            </div>
+            <div class="form-group">
+                <label for="foirPercentage">FOIR (%) :</label>
+                <input type="number" id="foirPercentage" value="50" />
+            </div>
+            <div class="form-group">
+                <label for="homeLoanEMI">Home Loan EMI:</label>
+                <input type="number" id="homeLoanEMI" value="20000" />
+            </div>
+            <div class="form-group">
+                <label for="personalLoanEMI">Personal Loan EMI:</label>
+                <input type="number" id="personalLoanEMI" value="10000" />
+            </div>
+            <div class="form-group">
+                <label for="creditCardDues1">Credit Card Dues 1:</label>
+                <input type="number" id="creditCardDues1" value="100000" />
+            </div>
+            <div class="form-group">
+                <label for="creditCardDues2">Credit Card Dues 2:</label>
+                <input type="number" id="creditCardDues2" value="120000" />
+            </div>
+            <div class="form-group">
+                <label for="creditCardDues3">Credit Card Dues 3:</label>
+                <input type="number" id="creditCardDues3" value="5000" />
+            </div>
+            <div class="form-group">
+                <label for="creditCardMinPayment">Credit Card Minimum Payment:</label>
+                <input type="number" id="creditCardMinPayment" value="3750" />
+            </div>
+            <div class="form-group">
+                <label for="otherEMI">Other EMI:</label>
+                <input type="number" id="otherEMI" value="3000" />
+            </div>
+            <div class="form-group">
+                <label for="emiPayingCapacity">EMI Paying Capacity:</label>
+                <input type="number" id="emiPayingCapacity" value="13250" />
+            </div>
+            <div class="form-group">
+                <label for="tenure">Tenure (Years):</label>
+                <input type="number" id="tenure" value="7" />
+            </div>
+            <div class="form-group">
+                <label for="paymentMode">Payment Mode (Months):</label>
+                <input type="number" id="paymentMode" value="12" />
+            </div>
+            <div class="form-group">
+                <label for="interestRate">Rate of Interest (%):</label>
+                <input type="number" id="interestRate" value="10" step="0.01" />
+            </div>
+            <button type="button" onclick="calculateLoanEligibility()">Calculate</button>
+        </form>
+        <div class="result" id="result">
+            <!-- Results will be displayed here -->
+        </div>
+    </div>
+    <script>
+        function calculateLoanEligibility() {
+            // Get the values from the form
+            const takeHomeSalary = parseFloat(document.getElementById('takeHomeSalary').value);
+            const foirPercentage = parseFloat(document.getElementById('foirPercentage').value) / 100;
+            const homeLoanEMI = parseFloat(document.getElementById('homeLoanEMI').value);
+            const personalLoanEMI = parseFloat(document.getElementById('personalLoanEMI').value);
+            const creditCardDues1 = parseFloat(document.getElementById('creditCardDues1').value);
+            const creditCardDues2 = parseFloat(document.getElementById('creditCardDues2').value);
+            const creditCardDues3 = parseFloat(document.getElementById('creditCardDues3').value);
+            const creditCardMinPayment = parseFloat(document.getElementById('creditCardMinPayment').value);
+            const otherEMI = parseFloat(document.getElementById('otherEMI').value);
+            const emiPayingCapacity = parseFloat(document.getElementById('emiPayingCapacity').value);
+            const tenure = parseFloat(document.getElementById('tenure').value);
+            const paymentMode = parseFloat(document.getElementById('paymentMode').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
 
-      // Total Monthly Obligations
-      const totalMonthlyObligations = homeLoanEMI + personalLoanEMI + creditCardMinPayment + otherEMI;
+            // Calculate available EMI capacity
+            const netSalary = takeHomeSalary * foirPercentage;
+            const totalEMI = homeLoanEMI + personalLoanEMI + creditCardMinPayment + otherEMI;
+            const availableEMI = emiPayingCapacity;
 
-      // Available EMI Capacity
-      const availableEMICapacity = takeHomeSalary - totalMonthlyObligations;
+            // Loan amount calculation using the EMI formula
+            const monthlyInterestRate = interestRate / paymentMode;
+            const numberOfPayments = tenure * paymentMode;
+            const loanAmount = (availableEMI * (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments))) / monthlyInterestRate;
 
-      // EMI Calculation
-      const monthlyInterestRate = interestRate / 12 / 100;
-      const numberOfPayments = loanTenure * 12;
-      const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
-
-      // Eligibility Check
-      const resultDiv = document.getElementById('result');
-      if (emi <= availableEMICapacity) {
-        resultDiv.innerHTML = `You are eligible for the loan. Your EMI will be ₹${emi.toFixed(2)}`;
-      } else {
-        resultDiv.innerHTML = `You are not eligible for the loan. Your EMI will be ₹${emi.toFixed(2)}`;
-      }
-    }
-
-
-  </script>
+            // Display the result
+            document.getElementById('result').innerHTML = `
+                <h3>Loan Eligibility Result</h3>
+                <p><strong>Net Salary for FOIR Calculation:</strong> ${netSalary.toFixed(2)}</p>
+                <p><strong>Total EMI:</strong> ${totalEMI.toFixed(2)}</p>
+                <p><strong>Available EMI Capacity:</strong> ${availableEMI.toFixed(2)}</p>
+                <p><strong>Estimated Loan Amount:</strong> ${loanAmount.toFixed(2)}</p>
+            `;
+        }
+    </script>
 </body>
-
 </html>
